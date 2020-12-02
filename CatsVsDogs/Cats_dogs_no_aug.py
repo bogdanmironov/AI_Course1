@@ -35,12 +35,12 @@ validation_dogs_dir = os.path.join(validation_dir, 'dogs')
 model = tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(150, 150, 3)),
     tf.keras.layers.MaxPooling2D(2, 2),
-#     tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
-#     tf.keras.layers.MaxPooling2D(2,2),
-#     tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
-#     tf.keras.layers.MaxPooling2D(2,2),
-#     tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
-#     tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
     tf.keras.layers.Flatten(),
     tf.keras.layers.Dense(512, activation='relu'),
     tf.keras.layers.Dense(1, activation='sigmoid')
@@ -61,7 +61,7 @@ test_datagen = ImageDataGenerator(rescale=1./255)
 train_generator = train_datagen.flow_from_directory(
         train_dir,  # This is the source directory for training images
         target_size=(150, 150),  # All images will be resized to 150x150
-        batch_size=20,
+        batch_size=100,
         # Since we use binary_crossentropy loss, we need binary labels
         class_mode='binary')
 
@@ -69,18 +69,17 @@ train_generator = train_datagen.flow_from_directory(
 validation_generator = test_datagen.flow_from_directory(
         validation_dir,
         target_size=(150, 150),
-        batch_size=20,
+        batch_size=100,
         class_mode='binary')
 
 
 history = model.fit(
       train_generator,
-      steps_per_epoch=100,  # 2000 images = batch_size * steps
+      steps_per_epoch=20,  # 2000 images = batch_size * steps
       epochs=30,
-#       validation_data=validation_generator,
-#       validation_steps=50,  # 1000 images = batch_size * steps
-#       verbose=2)
-)
+      validation_data=validation_generator,
+      validation_steps=10,  # 1000 images = batch_size * steps
+      verbose=2)
 
 
 import matplotlib.pyplot as plt
